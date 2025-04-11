@@ -55,7 +55,7 @@ class CipherApp(QWidget):
         layout.addWidget(self.detailEncryptBtn, alignment=Qt.AlignmentFlag.AlignCenter)
 
         # hien thi khoa ma hoa
-        self.encryptKeyLbl = QLabel("Khóa mã hóa: " + self.key_input.text().strip())
+        self.encryptKeyLbl = QLabel("Khóa mã hóa: ")
         self.encryptKeyLbl.hide()
         layout.addWidget(self.encryptKeyLbl)
         
@@ -110,9 +110,11 @@ class CipherApp(QWidget):
 
         self.encryption_details_text = "\n"
 
+        # hien thi cac noi dung da an
         self.resultLabel.setEnabled(True)
         self.resultLabel.setText(f"Kết quả mã hóa: {encrypted_char}")
         self.detailEncryptBtn.show()
+        self.encryptKeyLbl.setText("Khóa mã hóa: " + self.key_input.text().strip())
         self.encryptKeyLbl.show()
 
         self.decodeBtn.show()
@@ -129,7 +131,8 @@ class CipherApp(QWidget):
     # giai ma
     def decode_text(self):
         # lay ky tu da ma hoa
-        input_char = self.resultLabel.text().strip()
+        txt_res = self.resultLabel.text().strip()
+        input_char = txt_res[-1]
         if not input_char:
             self.decodingResultLbl.setText("Bạn chưa mã hóa!")
             return
