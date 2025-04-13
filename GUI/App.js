@@ -26,7 +26,7 @@ const createCMatrixEffect = (canvas) => {
     ctx.font = `${fontSize}px monospace`;
 
     drops.forEach((y, x) => {
-      const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+      const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
       const text = chars.charAt(
         Math.floor(Math.random() * chars.length)
       );
