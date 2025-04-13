@@ -1,4 +1,4 @@
-from A51 import A51Cipher
+from src.services.A51 import A51Cipher
 
 class StringEncrypt:
     @staticmethod 
