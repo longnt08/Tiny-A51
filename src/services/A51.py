@@ -1,51 +1,39 @@
-
 class A51Cipher:
-    def __init__(self, keyArr):
-        self.X = keyArr[:6]
-        self.Y = keyArr[6:14]
-        self.Z = keyArr[14:]
-
-    def turn_X(self):
-       self.X = [self.X[2] ^ self.X[4] ^ self.X[5]] + self.X[:-1]
-     
-    def turn_Y(self):
-        self.Y = [self.Y[6] ^ self.Y[7]] + self.Y[:-1]
-
-    def turn_Z(self):
-        self.Z = [self.Z[2] ^ self.Z[7] ^ self.Z[8]] + self.Z[:-1]
-
     @staticmethod
-    def maj(x, y, z):
-        return 1 if (x + y + z) >= 2 else 0
-
-    @staticmethod
-    def convert_text_to_binary_bits(character):
-        bitArr = [0] * 3
+    def encrypt(keyArr, character):
+        if character not in ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h',
+                             'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']:
+            return {"message": f"{character} vượt quá 8 chữ cái đầu tiên (A-H)", "status": False}
+        
+        # chuyen ky tu thanh bit nhi phan
         index = ord(character) - 41
+        bitInput = [(index >> i) & 1 for i in range(2, -1, -1)]
+
+        # khoi tao cac thanh ghi X, Y, Z
+        X, Y, Z = keyArr[:6], keyArr[6:14], keyArr[14:]
+
+        # sinh key bit (s)
+        s = []
         for i in range(3):
-            temp = index // (2 ** (2 - i))
-            bitArr[i] = temp % 2
-        return bitArr
+            current_registers = f"X: {X} \nY: {Y} \nZ: {Z} \n";
+            m = (X[1] + Y[3] + Z[3]) >= 2
 
-    def encrypt(self, character):
-        bitInput = self.convert_text_to_binary_bits(character)
-        s = [0] * 3
-        res = [0] * 3
+            if X[1] == m:
+                X = [X[2] ^ X[4] ^ X[5]] + X[:-1]
+            if Y[3] == m:
+                Y = [Y[6] ^ Y[7]] + Y[:-1]
+            if Z[3] == m:
+                Z = [Z[2] ^ Z[7] ^ Z[8]] + Z[:-1]
 
-        for i in range(3):
-            m = self.maj(self.X[1], self.Y[3], self.Z[3])
-            if self.X[1] == m:
-                self.turn_X()
-            if self.Y[3] == m:
-                self.turn_Y()
-            if self.Z[3] == m:
-                self.turn_Z()
-            s[i] = self.X[5] ^ self.Y[7] ^ self.Z[8]
+            s_bit = X[5] ^ Y[7] ^ Z[8]
+            s.append(s_bit)
 
-        for i in range(3):
-            res[i] = bitInput[i] ^ s[i]
+        # XOR voi bitInput de sinh ket qua
+        res = [bitInput[i] ^ s[i] for i in range(3)]
 
-        indexResult = sum(res[i] * (2 ** (2 - i)) for i in range(3))
-        characterRes = chr(ord('A') + indexResult)
+        # chuyen tu 3 bit ve ky tu
+        indexResult = sum(res[i] * (1 << (2-i)) for i in range(3))
+        encrypted_char = chr(ord('A') + indexResult)
 
-        return characterRes
+
+        return encrypted_char
