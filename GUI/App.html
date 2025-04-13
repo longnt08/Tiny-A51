@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TinyA5/1 Encryption</title>
+    <link rel="stylesheet" href="App.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="div-left-panel">
+        <div class="div-left-panel-absolute">
+          <div class="left-panel">
+            <h1>TINY A5/1</h1>
+            <label for="input-text">Kí tự cần mã hóa</label>
+            <input
+              type="text"
+              id="input-text"
+              placeholder="VD: A"
+              maxlength="1"
+            />
+            <label for="encryption-key">Khóa mã hóa</label>
+            <input
+              type="text"
+              id="encryption-key"
+              placeholder="23 ký tự {0;1}"
+            />
+
+            <button id="encrypt-button">Mã hóa</button>
+            <div id="result">Kết quả mã hóa: <span></span></div>
+            <button id="encrypt-button">Chi tiết mã hóa</button>
+            <button id="decrypt-button">Giải mã =></button>
+          </div>
+        </div>
+      </div>
+      <div class="center-panel"></div>
+      <div class="div-right-panel div-panel-hide">
+        <div class="div-right-panel-absolute">
+          <div class="right-panel">
+            <h1>TINY A5/1</h1>
+            <label for="input-text">Kí tự cần giải mã</label>
+            <input
+              type="text"
+              id="input-text-decrypt"
+              placeholder="VD: A"
+              maxlength="1"
+            />
+            <label for="decryption-key">Khóa giải mã</label>
+            <input
+              type="text"
+              id="decryption-key"
+              placeholder="23 ký tự {0;1}"
+            />
+
+            <button id="encrypt-button">Giải mã</button>
+            <div id="result">Kết quả giải mã: <span></span></div>
+            <button id="encrypt-button">Chi tiết giải mã</button>
+            <button id="decrypt-button"><= Mã hóa</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  <script src="App.js"></script>
+  </body>
+</html>

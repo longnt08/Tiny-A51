@@ -1,0 +1,201 @@
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  width: 100vw;
+  height: 100vh;
+  font-family: Arial, sans-serif;
+  overflow: hidden;
+}
+.container {
+  display: flex;
+  width: 1100px;
+  height: 500px;
+  margin: 0 auto;
+  background-color: black;
+  border-radius: 8px;
+  overflow: hidden;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 10px rgba(255, 0, 0, 0.5), 0 0 20px rgba(255, 0, 0, 0.3);
+  animation: red-glow 1.5s infinite alternate;
+}
+
+@keyframes red-glow {
+  0% {
+    box-shadow: 0 0 10px rgba(255, 0, 0, 0.5), 0 0 20px rgba(255, 0, 0, 0.3);
+  }
+  100% {
+    box-shadow: 0 0 20px rgba(255, 0, 0, 0.8), 0 0 40px rgba(255, 0, 0, 0.6);
+  }
+}
+.div-left-panel,
+.div-right-panel {
+  width: 290px;
+  height: 100%;
+  overflow: hidden;
+  transition: width 0.5s ease;
+  display: flex;
+}
+.div-left-panel-absolute,
+.div-right-panel-absolute {
+  width: 100%;
+  position: relative;
+}
+.div-left-panel-absolute {
+  justify-content: flex-start;
+}
+.div-right-panel-absolute {
+  justify-content: flex-end;
+}
+.div-panel-hide {
+  width: 0px;
+}
+.left-panel,
+.right-panel {
+  width: 270px;
+  color: green;
+  position: absolute;
+  top: 0;
+  overflow: hidden;
+}
+.left-panel {
+  left: 20px;
+}
+.right-panel {
+  right: 20px;
+}
+.left-panel h1,
+.right-panel h1 {
+  text-align: center;
+  font-family: "Courier New", Courier, monospace;
+  color: #00ff00;
+  text-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00, 0 0 30px #00ff00;
+}
+.left-panel label,
+.right-panel label {
+  font-family: "Courier New", Courier, monospace;
+  color: #00ff00;
+  text-shadow: 0 0 5px #00ff00, 0 0 10px #00ff00;
+  display: block;
+  margin: 0 0 10px 10px;
+  font-weight: bold;
+  font-size: 1.1em;
+  text-shadow: 1px 1px 2px rgba(0, 255, 0, 0.5);
+  user-select: none;
+}
+.left-panel input,
+.right-panel input {
+  font-family: "Courier New", Courier, monospace;
+  color: #00ff00;
+  background-color: #111;
+  border: 1px solid green;
+  text-shadow: 0 0 5px #00ff00;
+  width: 270px;
+  padding: 10px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 255, 0, 0.2);
+  transition: all 0.3s ease;
+  font-size: 1em;
+}
+.left-panel input:focus,
+.right-panel input:focus {
+  border-color: #00cc00;
+  box-shadow: 0 0 8px rgba(0, 255, 0, 0.7);
+  outline: none;
+  background-color: #222;
+}
+.left-panel input::placeholder,
+.right-panel input::placeholder {
+  font-family: "Courier New", Courier, monospace;
+  color: rgba(0, 255, 0, 0.6);
+  text-shadow: 0 0 5px rgba(0, 255, 0, 0.7);
+}
+.left-panel button,
+.right-panel button {
+  font-family: "Courier New", Courier, monospace;
+  background-color: #c20000;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 20px;
+  margin: 0 auto 20px auto;
+  display: block;
+  box-shadow: 3px 3px 7px rgba(255, 0, 0, 0.6);
+  text-shadow: 0 0 5px #00ff00;
+  transition: all 0.2s ease;
+}
+.left-panel button:hover,
+.right-panel button:hover {
+  background-color: #600000;
+  box-shadow: 5px 5px 12px rgba(255, 0, 0, 0.7);
+}
+.left-panel button:active,
+.right-panel button:active {
+  transform: translate(3px, 3px) scale(0.98);
+  box-shadow: 2px 2px 5px rgba(255, 0, 0, 0.8) inset;
+}
+#result {
+  font-family: "Courier New", Courier, monospace;
+  width: 260px;
+  color: #00ff00;
+  background-color: #000;
+  text-shadow: 0 0 5px #00ff00;
+  border: 1px solid #00ff00;
+  box-shadow: 0 0 10px #00ff00;
+  margin-bottom: 20px;
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 1.1em;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+#decrypt-button {
+  font-family: "Courier New", Courier, monospace;
+  background-color: #000;
+  color: #00ff00;
+  border: 1px solid #00ff00;
+  text-shadow: 0 0 5px #00ff00;
+  box-shadow: 0 0 10px #00ff00;
+  animation: hacker-glitch 1s infinite alternate;
+}
+.center-panel {
+  width: 750px;
+  background-color: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  margin: 20px 30px;
+  box-shadow: 0 0 15px rgba(0, 255, 0, 0.7), 0 0 30px rgba(0, 255, 0, 0.5);
+  border-radius: 10px;
+  border: 1px solid rgba(0, 255, 0, 0.8);
+  animation: hacker-glow 2s infinite alternate;
+}
+
+@keyframes hacker-glow {
+  0% {
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.5), 0 0 20px rgba(0, 255, 0, 0.3);
+  }
+  100% {
+    box-shadow: 0 0 20px rgba(0, 255, 0, 0.8), 0 0 40px rgba(0, 255, 0, 0.6);
+  }
+}
+@keyframes hacker-glitch {
+  0% {
+    text-shadow: 0 0 5px #00ff00, 0 0 10px #00ff00, 0 0 20px #00ff00;
+    box-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00;
+  }
+  50% {
+    text-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000, 0 0 30px #ff0000;
+    box-shadow: 0 0 15px #ff0000, 0 0 25px #ff0000;
+  }
+  100% {
+    text-shadow: 0 0 5px #00ff00, 0 0 10px #00ff00, 0 0 20px #00ff00;
+    box-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00;
+  }
+}
