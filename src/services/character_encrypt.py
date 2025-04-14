@@ -1,8 +1,11 @@
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from utils.check_input import check_character, check_key_arr
 class A51Cipher:
     @staticmethod
     def encrypt(keyArr, character):
-        if character not in ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h',
-                             'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']:
+        if not check_character(character=character):
             return {"message": f"{character} vượt quá 8 chữ cái đầu tiên (A-H)", "status": False}
         
         # chuyen ky tu thanh bit nhi phan
@@ -60,4 +63,36 @@ class A51Cipher:
         process_details.append(f"Vậy bản mã là: " + "".join(str(bit) for bit in res) + " ^ " + "".join(str(bit) for bit in s) + f" = {encrypted_char}")
 
         return {"result_character": encrypted_char, "process_details": process_details, "status": True} 
-        
+    
+
+def main():
+    character = input('Nhập bản rõ (A-H): ').strip().upper()
+
+    if not check_character(character=character):
+        print('Chỉ nhập ký tự từ A-H')
+        return  # Thoát luôn, không làm ăn gì nữa
+
+    key_str = input('Enter key (23 ký tự 0 hoặc 1): ').strip()
+
+    try:
+        key_arr = [int(x) for x in key_str]
+    except ValueError:
+        print("Key chỉ được chứa các số 0 hoặc 1.")
+        return
+
+    if not check_key_arr(key_arr=key_arr):
+        print("Khóa phải có 23 ký tự và chỉ chứa 0 hoặc 1.")
+        return
+
+    # Mã hóa
+    result = A51Cipher.encrypt(keyArr=key_arr, character=character)
+    encrypted_character = result['result_character']
+    process_details = result['process_details']
+
+    # In kết quả
+    print(f"\nKết quả mã hóa: {encrypted_character}")
+    print(f"\nKhóa mã hóa: {key_str}")
+    print(f"\nGiải thích chi tiết: {process_details}")
+
+if __name__ == '__main__':
+    main()

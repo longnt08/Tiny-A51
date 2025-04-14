@@ -23,10 +23,6 @@ def encrypt_character(data: TinyA51):
         key_str = str(data.key).strip()
         key_arr = [int(x) for x in key_str if x in ['0', '1']]
 
-        # print(f"key_str = {repr(key_str)}")
-        # print(f"key_arr = {key_arr} ({len(key_arr)} phần tử)")
-
-
         if len(key_arr) != 23:
             raise HTTPException(status_code=400, detail={"message": "Khóa mã hóa phải có độ dài là 23."})
 
