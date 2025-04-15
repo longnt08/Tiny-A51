@@ -5,9 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c2169b27-7d83-46ca-883b-6ffe0769d90f" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/TinyA51.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/TinyA51.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GUI/App.html" beforeDir="false" afterPath="$PROJECT_DIR$/GUI/App.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -51,11 +50,12 @@
   "keyToString": {
     "Python.A51CipherApp.executor": "Run",
     "Python.A51CipherStringGUI.executor": "Run",
+    "Python.app.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "hanh",
+    "git-widget-placeholder": "main",
     "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "D:/Tiny-A51",
+    "last_opened_file_path": "D:/KiemThu/kiem-thu",
     "settings.editor.selected.configurable": "preferences.pluginManager"
   }
 }]]></component>
