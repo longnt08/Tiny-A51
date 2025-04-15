@@ -1,4 +1,3 @@
-// 📦 Khai báo biến tập trung
 const centerPanel = document.querySelector(".center-panel");
 const validChars = "ABCDEFGH";
 const validKeyChars = "01";
@@ -18,24 +17,47 @@ const keyInputs = [keyInputEncrypt, keyInputDecrypt];
 const toEncryptButton = document.querySelector("#to-encrypt-button");
 const toDecryptButton = document.querySelector("#to-decrypt-button");
 
-const observer = new MutationObserver((mutations) => {
-  mutations.forEach((mutation) => {
-    const target = mutation.target;
-    if (target.textContent === "") {
-      target.classList.add("div-hidden");
-    } else {
-      target.classList.remove("div-hidden");
+let encryptDetails = "";
+let decryptDetails = "";
+
+const observer = new MutationObserver(() => {
+  // Xử lý cho kết quả mã hóa
+  if (encryptResultSpan.textContent === "") {
+    encryptResult.classList.add("div-hidden");
+    document.getElementById("encrypt-show").classList.add("div-hidden");
+    centerPanel.innerHTML = "";
+    // Reset centerPanel nếu đang hiển thị chi tiết mã hóa
+    if (centerPanel.dataset.current === "encrypt") {
+      delete centerPanel.dataset.current;
     }
-  });
+  } else {
+    encryptResult.classList.remove("div-hidden");
+    document.getElementById("encrypt-show").classList.remove("div-hidden");
+  }
+
+  // Xử lý cho kết quả giải mã
+  if (decryptResultSpan.textContent === "") {
+    decryptResult.classList.add("div-hidden");
+    document.getElementById("decrypt-show").classList.add("div-hidden");
+    centerPanel.innerHTML = "";
+    // Reset centerPanel nếu đang hiển thị chi tiết giải mã
+    if (centerPanel.dataset.current === "decrypt") {
+      delete centerPanel.dataset.current;
+    }
+  } else {
+    decryptResult.classList.remove("div-hidden");
+    document.getElementById("decrypt-show").classList.remove("div-hidden");
+  }
 });
 
-observer.observe(encryptResult, {
+// Bắt đầu theo dõi span - là nơi textContent thực sự thay đổi
+observer.observe(encryptResultSpan, {
   characterData: true,
   childList: true,
   subtree: true,
 });
 
-observer.observe(decryptResult, {
+observer.observe(decryptResultSpan, {
   characterData: true,
   childList: true,
   subtree: true,
@@ -43,7 +65,7 @@ observer.observe(decryptResult, {
 
 // 🔠 Validation cho ký tự A–H
 textInputs.forEach((input) => {
-  input.addEventListener("keydown", function (event) {
+  input.addEventListener("keydown", (event) => {
     const char = event.key;
     if (char.length === 1 && !validChars.includes(char.toUpperCase())) {
       event.preventDefault();
@@ -51,7 +73,7 @@ textInputs.forEach((input) => {
     }
   });
 
-  input.addEventListener("input", function () {
+  input.addEventListener("input", () => {
     const filtered = input.value
       .split("")
       .filter((char) => validChars.includes(char.toUpperCase()));
@@ -65,7 +87,7 @@ textInputs.forEach((input) => {
 
 // 🧮 Validation cho key 0–1
 keyInputs.forEach((input) => {
-  input.addEventListener("keydown", function (event) {
+  input.addEventListener("keydown", (event) => {
     const char = event.key;
     if (char.length === 1 && !validKeyChars.includes(char)) {
       event.preventDefault();
@@ -73,7 +95,7 @@ keyInputs.forEach((input) => {
     }
   });
 
-  input.addEventListener("input", function () {
+  input.addEventListener("input", () => {
     let filtered = input.value
       .split("")
       .filter((char) => validKeyChars.includes(char));
@@ -108,7 +130,10 @@ function showError(message) {
 
   const errorDiv = document.createElement("div");
   errorDiv.className = "error-message";
-  errorDiv.textContent = message;
+  errorDiv.textContent =
+    typeof message === "string"
+      ? message
+      : message.message || "Lỗi không xác định";
   errorDiv.style.color = "red";
   errorDiv.style.margin = "5px 0";
 
@@ -123,9 +148,79 @@ function showError(message) {
   }, 5000);
 }
 
+// 🧪 Hàm gửi request mã hóa / giải mã
+async function sendRequest(inputText, key, type, isEncrypt) {
+  try {
+    const response = await fetch(API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        plain_text: inputText,
+        key: key,
+        type: type,
+      }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) throw data.detail || "Có lỗi xảy ra";
+
+    const isSingleChar = inputText.length === 1;
+    const resultText = isSingleChar
+      ? isEncrypt
+        ? data.encrypted_character
+        : data.decrypted_character
+      : isEncrypt
+      ? data.encrypted_string
+      : data.decrypted_string;
+
+    if (isEncrypt) {
+      encryptResultSpan.textContent = resultText;
+      encryptResult.classList.remove("div-hidden");
+      encryptDetails = data.process_details || "";
+      document.getElementById("encrypt-show").classList.remove("div-hidden");
+    } else {
+      decryptResultSpan.textContent = resultText;
+      decryptResult.classList.remove("div-hidden");
+      decryptDetails = data.process_details || "";
+      document.getElementById("decrypt-show").classList.remove("div-hidden");
+    }
+  } catch (err) {
+    showError("Lỗi: " + (err.message || err));
+  }
+}
+
+// 🔐 Submit Encrypt
+document.getElementById("encryption-form").addEventListener("submit", (e) => {
+  e.preventDefault();
+  const input = textInputEncrypt.value.trim();
+  const key = keyInputEncrypt.value.trim();
+
+  if (!input || key.length !== 23) {
+    showError("Vui lòng nhập đầy đủ kí tự và khóa hợp lệ (23 ký tự 0/1)");
+    return;
+  }
+
+  sendRequest(input, key, "encrypt", true);
+});
+
+// 🔓 Submit Decrypt
+document.getElementById("decryption-form").addEventListener("submit", (e) => {
+  e.preventDefault();
+  const input = textInputDecrypt.value.trim();
+  const key = keyInputDecrypt.value.trim();
+
+  if (!input || key.length !== 23) {
+    showError("Vui lòng nhập đầy đủ kí tự và khóa hợp lệ (23 ký tự 0/1)");
+    return;
+  }
+
+  sendRequest(input, key, "decrypt", false);
+});
+
 // 🔁 Toggle giữa panel mã hóa ⇄ giải mã
 [toEncryptButton, toDecryptButton].forEach((button) => {
-  button.addEventListener("click", function () {
+  button.addEventListener("click", () => {
     document
       .querySelector(".div-left-panel")
       .classList.toggle("div-panel-hide");
@@ -135,17 +230,13 @@ function showError(message) {
   });
 });
 
-toDecryptButton.addEventListener("click", function () {
+toDecryptButton.addEventListener("click", () => {
   if (keyInputEncrypt.value.length === 23) {
     keyInputDecrypt.value = keyInputEncrypt.value;
   }
 
   if (encryptResultSpan.textContent) {
-    const cleanedText = encryptResultSpan.textContent.replace(
-      "Kết quả mã hóa: ",
-      ""
-    );
-    textInputDecrypt.value = cleanedText;
+    textInputDecrypt.value = encryptResultSpan.textContent;
   }
 
   textInputEncrypt.value = "";
@@ -153,17 +244,13 @@ toDecryptButton.addEventListener("click", function () {
   encryptResultSpan.textContent = "";
 });
 
-toEncryptButton.addEventListener("click", function () {
+toEncryptButton.addEventListener("click", () => {
   if (keyInputDecrypt.value.length === 23) {
     keyInputEncrypt.value = keyInputDecrypt.value;
   }
 
   if (decryptResultSpan.textContent) {
-    const cleanedText = decryptResultSpan.textContent.replace(
-      "Kết quả giải mã: ",
-      ""
-    );
-    textInputEncrypt.value = cleanedText;
+    textInputEncrypt.value = decryptResultSpan.textContent;
   }
 
   textInputDecrypt.value = "";
@@ -189,10 +276,9 @@ keyInputDecrypt.addEventListener(
   () => (decryptResultSpan.textContent = "")
 );
 
-// 🌧️ Matrix Effect
+// 🌧️ Matrix Effect (không đổi)
 const createCMatrixEffect = (canvas) => {
   const ctx = canvas.getContext("2d");
-
   canvas.width = canvas.parentElement.offsetWidth;
   canvas.height = canvas.parentElement.offsetHeight;
 
@@ -212,9 +298,7 @@ const createCMatrixEffect = (canvas) => {
       const text = chars.charAt(Math.floor(Math.random() * chars.length));
       ctx.fillText(text, x * fontSize, y * fontSize);
 
-      if (y * fontSize > canvas.height && Math.random() > 0.975) {
-        drops[x] = 0;
-      }
+      if (y * fontSize > canvas.height && Math.random() > 0.975) drops[x] = 0;
       drops[x]++;
     });
   };
@@ -230,32 +314,20 @@ bodyCanvas.style.zIndex = -1;
 document.body.appendChild(bodyCanvas);
 createCMatrixEffect(bodyCanvas);
 
+// 🌌 Glitch Effect (hoạt ảnh nhàn rỗi)
 const glitchEffectDuration = 5000;
-
 let idleTimer = null;
 let glitchInterval = null;
 
 const isIdle = () => {
-  const hasInput =
-    textInputEncrypt.value ||
-    textInputDecrypt.value ||
-    keyInputEncrypt.value ||
-    keyInputDecrypt.value;
-
-  const hasOutput =
-    encryptResultSpan.textContent || decryptResultSpan.textContent;
-
-  return !hasInput && !hasOutput;
+  return centerPanel.children.length === 0;
 };
 
 const resetGlitchEffect = () => {
   clearInterval(glitchInterval);
   glitchInterval = null;
-
   const logo = document.querySelector(".bouncing-logo");
-  if (logo) {
-    logo.remove();
-  }
+  if (logo) logo.remove();
 };
 
 const getBrightColor = () => {
@@ -264,7 +336,6 @@ const getBrightColor = () => {
 };
 
 const startGlitchEffect = () => {
-  // Ngừa trường hợp bị gọi nhiều lần
   if (document.querySelector(".bouncing-logo")) return;
 
   const logo = document.createElement("div");
@@ -285,21 +356,14 @@ const startGlitchEffect = () => {
   `;
   centerPanel.appendChild(logo);
 
-  let posX = 0;
-  let posY = 0;
-  let dirX = 2;
-  let dirY = 2;
-
-  const maxX = 620;
-  const maxY = 440;
+  let posX = 0,
+    posY = 0,
+    dirX = 2,
+    dirY = 2;
+  const maxX = 620,
+    maxY = 440;
 
   glitchInterval = setInterval(() => {
-    // Nếu không còn idle nữa thì dừng hiệu ứng liền
-    if (!isIdle()) {
-      resetGlitchEffect();
-      return;
-    }
-
     posX += dirX;
     posY += dirY;
 
@@ -320,11 +384,6 @@ const startGlitchEffect = () => {
 const handleIdleEffect = () => {
   clearTimeout(idleTimer);
 
-  if (!isIdle()) {
-    resetGlitchEffect(); // Dừng ngay nếu đang hoạt động
-    return;
-  }
-
   idleTimer = setTimeout(() => {
     if (isIdle()) {
       startGlitchEffect();
@@ -332,16 +391,17 @@ const handleIdleEffect = () => {
   }, glitchEffectDuration);
 };
 
-["input", "change"].forEach((event) => {
-  [
-    textInputEncrypt,
-    textInputDecrypt,
-    keyInputEncrypt,
-    keyInputDecrypt,
-  ].forEach((element) => {
-    element.addEventListener(event, handleIdleEffect);
-  });
+const glitchObserver = new MutationObserver((mutations) => {
+  if (centerPanel.children.length >= 2) {
+    resetGlitchEffect();
+  } else if (centerPanel.children.length === 0) {
+    handleIdleEffect();
+  }
 });
 
-// Gọi lần đầu
+glitchObserver.observe(centerPanel, {
+  childList: true,
+  subtree: true,
+});
+
 handleIdleEffect();

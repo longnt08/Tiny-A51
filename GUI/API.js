@@ -3,8 +3,8 @@ const decryptForm = document.getElementById("decryption-form");
 
 const API_URL = "http://127.0.0.1:8000/api/Tiny-A51";
 
-let encryptDetails = "";
-let decryptDetails = "";
+encryptDetails = "";
+decryptDetails = "";
 
 encryptForm.addEventListener("submit", async function (event) {
   event.preventDefault();
@@ -42,14 +42,13 @@ encryptForm.addEventListener("submit", async function (event) {
     document.querySelector("#encrypt-result span").textContent = resultText;
     document.getElementById("encrypt-result").classList.remove("div-hidden");
 
-    encryptDetails = data.process_details || "";
+    encryptDetails = data.process_details || [];
     document.getElementById("encrypt-show").classList.remove("div-hidden");
   } catch (err) {
     showError("Lỗi khi mã hóa: " + (err.message || err));
   }
 });
 
-// Giải mã
 decryptForm.addEventListener("submit", async function (event) {
   event.preventDefault();
 
@@ -86,9 +85,50 @@ decryptForm.addEventListener("submit", async function (event) {
     document.querySelector("#decrypt-result span").textContent = resultText;
     document.getElementById("decrypt-result").classList.remove("div-hidden");
 
-    decryptDetails = data.process_details || "";
+    decryptDetails = data.process_details || [];
     document.getElementById("decrypt-show").classList.remove("div-hidden");
   } catch (err) {
     showError("Lỗi khi giải mã: " + (err.message || err));
   }
+});
+
+function displayProcessDetails(detailsArray) {
+  centerPanel.innerHTML = "";
+
+  if (!Array.isArray(detailsArray) || detailsArray.length === 0) {
+    centerPanel.textContent = "Không có chi tiết mã hóa/giải mã.";
+    return;
+  }
+
+  // Tạo container chứa các dòng chi tiết
+  const container = document.createElement("div");
+  container.style.display = "flex";
+  container.style.flexDirection = "row";
+  container.style.gap = "50px";
+  container.style.padding = "0 20px";
+  container.style.position = "relative";
+
+  detailsArray.forEach((line) => {
+    const detailLine = document.createElement("pre");
+    detailLine.textContent = line;
+    container.appendChild(detailLine);
+  });
+
+  centerPanel.appendChild(container);
+
+  // Chờ render xong rồi set left = 50% - nửa chiều rộng container
+  requestAnimationFrame(() => {
+    const halfContainerWidth = container.offsetWidth / 2;
+    container.style.left = `calc(-50% + ${halfContainerWidth}px)`;
+  });
+}
+
+// 🧠 Gắn event listener cho nút "Xem chi tiết"
+document.getElementById("encrypt-show").addEventListener("click", () => {
+  console.log(encryptDetails);
+  displayProcessDetails(encryptDetails);
+});
+
+document.getElementById("decrypt-show").addEventListener("click", () => {
+  displayProcessDetails(decryptDetails);
 });

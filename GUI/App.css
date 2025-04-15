@@ -188,7 +188,19 @@ button.div-hidden {
   border-radius: 10px;
   border: 1px solid rgba(0, 255, 0, 0.8);
   animation: hacker-glow 2s infinite alternate;
-  overflow: hidden;
+  overflow-x: auto;
+  overflow-y: hidden;
+  color: #00ff00;
+  text-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00;
+  font-family: "Courier New", Courier, monospace;
+  padding: 10px;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+.center-panel::-webkit-scrollbar {
+  width: 0;
+  height: 0;
 }
 
 @keyframes hacker-glow {
