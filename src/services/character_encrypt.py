@@ -60,7 +60,7 @@ class A51Cipher:
         indexResult = sum(res[i] * (1 << (2-i)) for i in range(3))
         encrypted_char = chr(ord('A') + indexResult)
 
-        process_details.append(f"Vậy bản mã là: " + "".join(str(bit) for bit in res) + " ^ " + "".join(str(bit) for bit in s) + f" = {encrypted_char}")
+        process_details.append(f"Vậy bản mã là: " + "".join(str(bit) for bit in bitInput) + " ^ " + "".join(str(bit) for bit in s) + " = " + "".join(str(bit) for bit in res) + f"({encrypted_char})")
 
         return {"result_character": encrypted_char, "process_details": process_details, "status": True} 
     
